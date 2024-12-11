@@ -1,6 +1,9 @@
 import { Component } from "react";
 import { APIService } from "./service/api";
 import { CardComponent } from "./components/card";
+import { DrawerComponent } from "./components/menu";
+import { Grid2 } from "@mui/material";
+import { ListContext } from "./context/list";
 interface AppState {
   message: string;
   data: any[];
@@ -12,13 +15,13 @@ export class App extends Component<object, AppState> {
   constructor(props: object) {
     super(props);
     this.state = {
-      message: "Bem-vindo ao App básico em React!",
+      message: "",
       data: [],
     };
     this.apiService = new APIService();
   }
 
-  handleChangeMessage = async () => {
+  async handleRadioChannels() {
     const request = this.apiService.createRequest();
 
     const data = await this.apiService.getRadioChannel(request, 10);
@@ -26,23 +29,40 @@ export class App extends Component<object, AppState> {
     this.setState({
       message: !data.length
         ? "Não há canais para serem exibidos."
-        : "Lista de Canais",
+        : "Radio Browser",
       data: data,
     });
-  };
+  }
+
+  componentDidMount(): void {
+    this.handleRadioChannels();
+  }
 
   render() {
     return (
-      <div>
-        <h1>{this.state.message}</h1>
-        <>
-          {this.state.data.map((el, index) => (
-            <CardComponent key={index}>{el.votes}</CardComponent>
-          ))}
-        </>
+      <Grid2>
+        <Grid2 container>
+          <h1>{this.state.message}</h1>
+          <DrawerComponent>
+            {this.state.data.map((el, index) => (
+              <CardComponent key={index} mediaUrl={el.url} isMenuItem>
+                {el.name}
+              </CardComponent>
+            ))}
+          </DrawerComponent>
+        </Grid2>
 
-        <button onClick={this.handleChangeMessage}>Clique aqui</button>
-      </div>
+        <ListContext.Consumer>
+          {(context) => {
+            const { list } = context;
+            return list.map((el: any, index: number) => (
+              <Grid2 container key={index}>
+                <h1>{el}</h1>
+              </Grid2>
+            ));
+          }}
+        </ListContext.Consumer>
+      </Grid2>
     );
   }
 }
