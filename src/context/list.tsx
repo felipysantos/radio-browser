@@ -1,4 +1,4 @@
-import { createContext, Component } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export const ListContext = createContext<any>(null);
 
@@ -6,44 +6,49 @@ interface ListProviderProps {
   children: any;
 }
 
-interface ListProviderState {
-  list: any[];
-}
+export const ListProvider = ({ children }: ListProviderProps) => {
+  const [list, setList] = useState<any[]>(() => {
+    const savedList = localStorage.getItem("myList");
+    return savedList ? JSON.parse(savedList) : [];
+  });
 
-export class ListProvider extends Component<
-  ListProviderProps,
-  ListProviderState
-> {
-  constructor(props: ListProviderProps) {
-    super(props);
-    this.state = {
-      list: [],
-    };
-  }
+  const toggleItem = (element: any) => {
+    if (!element || !element.changeuuid) {
+      console.error("Elemento inválido ou 'changeuuid' ausente");
+      return;
+    }
+    
+    setList((prevList) => {
+      const isElementInList = prevList.some(
+        (el) => el.changeuuid === element.changeuuid
+      );
 
-  toggleItem = (element: any) => {
-    this.setState((prevState) => {
-      const isElementInList = prevState.list.includes(element);
-
-      return {
-        list: isElementInList
-          ? prevState.list.filter((el) => el !== element)
-          : [...prevState.list, element],
-      };
+      return isElementInList
+        ? prevList.filter((el) => el.changeuuid !== element.changeuuid)
+        : [...prevList, element];
     });
   };
 
-  render() {
-    const { list } = this.state;
-    return (
-      <ListContext.Provider
-        value={{
-          list,
-          toggleItem: this.toggleItem,
-        }}
-      >
-        {this.props.children}
-      </ListContext.Provider>
-    );
-  }
-}
+  const editItem = (element: any, editedElement: any) => {
+    setList((prevList) => {
+      return prevList.map((item) => (item === element ? editedElement : item));
+    });
+  };
+
+  useEffect(() => {
+    const savedList = localStorage.getItem("myList");
+    if (savedList) {
+      setList(JSON.parse(savedList));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("myList", JSON.stringify(list));
+  }, [list]);
+
+  return (
+    <ListContext.Provider value={{ list, toggleItem, editItem }}>
+      {children}
+    </ListContext.Provider>
+  );
+};

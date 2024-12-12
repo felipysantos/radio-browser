@@ -1,48 +1,54 @@
 import { Button, SwipeableDrawer } from "@mui/material";
-import { Component } from "react";
-
-interface DrawerState {
-  [key: string]: any;
-}
+import { useState } from "react";
+// import { CiMenuBurger } from "react-icons/ci";
+import { FaSearch } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 
 interface DrawerProps {
   children: any;
+  display: string;
 }
 
-export class DrawerComponent extends Component<DrawerProps, DrawerState> {
-  constructor(props: DrawerProps) {
-    super(props);
-    this.state = {
-      isOpen: false,
-    };
-  }
+export const DrawerComponent = ({ children, display }: DrawerProps) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-  onOpen = () => {
-    this.setState({ isOpen: true });
-    return;
+  const onOpen = () => {
+    setIsOpen(true);
   };
 
-  onClose = () => {
-    this.setState({ isOpen: false });
-    return;
+  const onClose = () => {
+    setIsOpen(false);
   };
 
-  render() {
-    const { isOpen } = this.state;
-    const { children } = this.props;
-    return (
-      <>
-        <Button onClick={this.onOpen}>Open</Button>
+  return (
+    <>
+      <Button
+        sx={{
+          display: {
+            md: display,
+          },
+        }}
+        onClick={onOpen}
+      >
+        <FaSearch />
+      </Button>
 
-        <SwipeableDrawer
-          anchor="right"
-          open={isOpen}
-          onClose={this.onClose}
-          onOpen={this.onOpen}
-        >
-          {children}
-        </SwipeableDrawer>
-      </>
-    );
-  }
-}
+      <SwipeableDrawer
+        anchor="right"
+        open={isOpen}
+        onClose={onClose}
+        onOpen={onOpen}
+        PaperProps={{ sx: { width: "100%" } }}
+      >
+        <Button sx={{
+          width:'100%',
+          display:"flex",
+          justifyContent: "flex-start"
+        }} onClick={onClose}>
+          <FaArrowLeft fontSize={28} />
+        </Button>
+        {children}
+      </SwipeableDrawer>
+    </>
+  );
+};

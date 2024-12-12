@@ -1,68 +1,183 @@
-import { Component } from "react";
-import { APIService } from "./service/api";
+import { useState, useEffect } from "react";
+import { createRequest, getRadioChannel } from "./service/api";
 import { CardComponent } from "./components/card";
 import { DrawerComponent } from "./components/menu";
-import { Grid2 } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid2,
+  Input,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { ListContext } from "./context/list";
-interface AppState {
-  message: string;
-  data: any[];
-}
+import { AccordionComponent } from "./components/menuDesktop";
 
-export class App extends Component<object, AppState> {
-  private apiService: APIService;
+export const App = () => {
+  const [data, setData] = useState<any[]>([]);
+  const [search, setSearch] = useState<string>("");
+  const [isFocused, setIsFocused] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
-  constructor(props: object) {
-    super(props);
-    this.state = {
-      message: "",
-      data: [],
-    };
-    this.apiService = new APIService();
-  }
+  const handleRadioChannels = async (more?: number) => {
+    const request = createRequest();
+    const count = more ? 10 + more : 10;
+    const data = await getRadioChannel(request, count);
+    setData(data);
+  };
 
-  async handleRadioChannels() {
-    const request = this.apiService.createRequest();
+  const handleChangeSearch = (value: string) => {
+    setSearch(value);
+  };
 
-    const data = await this.apiService.getRadioChannel(request, 10);
+  useEffect(() => {
+    handleRadioChannels();
+  }, []);
 
-    this.setState({
-      message: !data.length
-        ? "Não há canais para serem exibidos."
-        : "Radio Browser",
-      data: data,
-    });
-  }
+  return (
+    <Grid2
+      container
+      alignContent={isMobile ? "center" : ""}
+      justifyContent={"start"}
+    >
+      {data ? (
+        <AccordionComponent>
+          <Input
+            sx={{
+              width: "100%",
+              border: "1px solid #1976D2",
+              borderRadius: "4px",
+              paddingX: "5px",
+            }}
+            value={search}
+            onChange={(e) => handleChangeSearch(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+          />
+          {isFocused && (
+            <Typography variant="body2" color="textSecondary">
+              Pesquise por Nome, País ou Idioma.
+            </Typography>
+          )}
+          {search
+            ? data
+                .filter((el) => {
+                  const name = el?.name?.toLowerCase() || "";
+                  const country = el?.country?.toLowerCase() || "";
+                  const language = el?.language?.toLowerCase() || "";
+                  const lowerSearch = search.toLowerCase();
 
-  componentDidMount(): void {
-    this.handleRadioChannels();
-  }
+                  return (
+                    name.includes(lowerSearch) ||
+                    country.includes(lowerSearch) ||
+                    language.includes(lowerSearch)
+                  );
+                })
+                .map((el) => (
+                  <CardComponent mediaUrl={el.url} isMenuItem>
+                    {el}
+                  </CardComponent>
+                ))
+            : data.map((el) => (
+                <CardComponent mediaUrl={el.url} isMenuItem>
+                  {el}
+                </CardComponent>
+              ))}
+          <Box width={"100%"} marginTop={1.5}>
+            <Button
+              variant="contained"
+              sx={{
+                width: "100%",
+                backgroundColor: "#19D1B7",
+              }}
+              onClick={() => handleRadioChannels(10)}
+            >
+              Mais
+            </Button>
+          </Box>
+        </AccordionComponent>
+      ) : (
+        <h1>Não há estações para exibir</h1>
+      )}
 
-  render() {
-    return (
-      <Grid2>
+      <Grid2 marginLeft={4}>
         <Grid2 container>
-          <h1>{this.state.message}</h1>
-          <DrawerComponent>
-            {this.state.data.map((el, index) => (
-              <CardComponent key={index} mediaUrl={el.url} isMenuItem>
-                {el.name}
-              </CardComponent>
-            ))}
+          <Typography variant="h3">Radio Browser</Typography>
+          <DrawerComponent display="none">
+            <Input
+              sx={{
+                width: "100%",
+                border: "1px solid #1976D2",
+                borderRadius: "4px",
+                paddingX: "5px",
+              }}
+              value={search}
+              onChange={(e) => handleChangeSearch(e.target.value)}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+            />
+            {isFocused && (
+              <Typography variant="body2" color="textSecondary">
+                Pesquise por Nome, País ou Idioma.
+              </Typography>
+            )}
+            {search
+              ? data
+                  .filter((el) => {
+                    const name = el?.name?.toLowerCase() || "";
+                    const lowerSearch = search.toLowerCase();
+                    return name.includes(lowerSearch);
+                  })
+                  .map((el) => (
+                    <CardComponent mediaUrl={el.url} isMenuItem>
+                      {el}
+                    </CardComponent>
+                  ))
+              : data.map((el) => (
+                  <CardComponent mediaUrl={el.url} isMenuItem>
+                    {el}
+                  </CardComponent>
+                ))}
+            <Box width={"100%"} marginTop={1.5}>
+              <Button
+                variant="contained"
+                sx={{
+                  width: "100%",
+                  backgroundColor: "#19D1B7",
+                }}
+                onClick={() => handleRadioChannels(10)}
+              >
+                Mais
+              </Button>
+            </Box>
           </DrawerComponent>
         </Grid2>
 
+        {/* Lista de Favoritos */}
         <ListContext.Consumer>
           {(context) => {
             const { list } = context;
-            return list.map((el: any, index: number) => (
-              <Grid2 container key={index}>
-                <h1>{el}</h1>
+
+            return (
+              <Grid2>
+                {!list.length ? (
+                  <Typography variant="h6">
+                    Adicione uma estação favorita
+                  </Typography>
+                ) : (
+                  list.map((el: any) => {
+                    return (
+                      <CardComponent mediaUrl={el.url} isMenuItem={false}>
+                        {el}
+                      </CardComponent>
+                    );
+                  })
+                )}
               </Grid2>
-            ));
+            );
           }}
         </ListContext.Consumer>
       </Grid2>
-    );
-  }
-}
+    </Grid2>
+  );
+};
