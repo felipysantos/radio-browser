@@ -1,6 +1,5 @@
 import { Button, SwipeableDrawer } from "@mui/material";
 import { useState } from "react";
-// import { CiMenuBurger } from "react-icons/ci";
 import { FaSearch } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa";
 

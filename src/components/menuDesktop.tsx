@@ -5,7 +5,7 @@ import { TiThMenu } from "react-icons/ti";
 export const AccordionComponent = ({ children }: any) => {
   const [expanded, setExpanded] = useState(true);
 
-  const handleChange = (event: any, isExpanded: boolean) => {
+  const handleChange = (_: any, isExpanded: boolean) => {
     setExpanded(isExpanded);
   };
 
