@@ -10,7 +10,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { ListContext } from "./context/list";
+import { ListContext } from "./context/listContext";
 import { AccordionComponent } from "./components/menuDesktop";
 
 export const App = () => {
@@ -59,7 +59,7 @@ export const App = () => {
               Pesquise por Nome, País ou Idioma.
             </Typography>
           )}
-          {search
+          {Array.isArray(data) &&(search
             ? data
                 .filter((el) => {
                   const name = el?.name?.toLowerCase() || "";
@@ -82,7 +82,7 @@ export const App = () => {
                 <CardComponent mediaUrl={el.url} isMenuItem>
                   {el}
                 </CardComponent>
-              ))}
+              )))}
           <Box width={"100%"} marginTop={1.5}>
             <Button
               variant="contained"
@@ -121,7 +121,7 @@ export const App = () => {
                 Pesquise por Nome, País ou Idioma.
               </Typography>
             )}
-            {search
+            {Array.isArray(data) &&(search
               ? data
                   .filter((el) => {
                     const name = el?.name?.toLowerCase() || "";
@@ -137,7 +137,7 @@ export const App = () => {
                   <CardComponent mediaUrl={el.url} isMenuItem>
                     {el}
                   </CardComponent>
-                ))}
+                )))}
             <Box width={"100%"} marginTop={1.5}>
               <Button
                 variant="contained"

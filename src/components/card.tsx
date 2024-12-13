@@ -3,7 +3,7 @@ import { useState, useRef, useContext } from "react";
 import { IoIosPlayCircle } from "react-icons/io";
 import { IoPauseCircle } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa";
-import { ListContext } from "../context/list";
+import { ListContext } from "../context/listContext";
 
 interface CardProps {
   children: any;

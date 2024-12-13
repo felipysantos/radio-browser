@@ -1,6 +1,5 @@
-import { createContext, useEffect, useState } from "react";
-
-export const ListContext = createContext<any>(null);
+import { useEffect, useState } from "react";
+import { ListContext } from "./listContext";
 
 interface ListProviderProps {
   children: any;
@@ -17,7 +16,7 @@ export const ListProvider = ({ children }: ListProviderProps) => {
       console.error("Elemento inválido ou 'changeuuid' ausente");
       return;
     }
-    
+
     setList((prevList) => {
       const isElementInList = prevList.some(
         (el) => el.changeuuid === element.changeuuid
