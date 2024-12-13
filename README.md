@@ -1,50 +1,50 @@
-# React + TypeScript + Vite
+# Radio Browser
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+O **Radio Browser** é uma aplicação web que permite buscar, ouvir e adicionar rádios a sua lista de favoritos. Ele comunica via API para buscar uma lista de estações de rádio, oferecendo uma interface simples para reprodução e gestão das estações favoritas.
 
-Currently, two official plugins are available:
+## Tecnologias utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React**: Interface;
+- **TypeScript**: Garantir maior segurança e tipagem no código;
+- **Vite**: Ferramenta de build;
+- **Axios**: requisições à API de rádios;
+- **Material UI**: Biblioteca de componentes React;
+- **Docker**: Gerenciamento de contêiners;
+- **Vercel**: Ferramenta para Deploy/Hospedagem da plataforma;
 
-## Expanding the ESLint configuration
+## Funcionalidades
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Buscar rádios**: Pesquisa por estações de rádio pelo nome, país e idioma;
+- **Reprodução de rádio**: Ouça a radio no seu navegador;
+- **Favoritos**: Adicione estações de rádio à sua lista de favoritos para fácil acesso;
 
-- Configure the top-level `parserOptions` property like this:
+## Guia de instalação:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+    git clone https://github.com/seu-usuario/radio-browser.git
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+    cd radio-browser
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+    yarn && yarn build
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+- **Execute em produção com o comando:**
+
+  yarn preview
+
+- **Para desenvolvimento, utilize:**
+
+  yarn dev
+
+  ## Acesso ao projeto
+
+Você pode acessar o [código fonte](https://github.com/felipysantos/radio-browser) ou o [site](https://radio-browser-9bguh8tkq-felipysantos-projects.vercel.app/) do projeto.
+
+## Desenvolvedor
+
+[![Felipy Santos](https://avatars.githubusercontent.com/u/72530197?v=4)](https://github.com/felipysantos)<br>
+[Felipy Santos](https://github.com/felipysantos)
+
+---
+
+Este é um desafio da [Coodesh](https://coodesh.com/)
+
+---
