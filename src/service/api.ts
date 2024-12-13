@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 
 export const createRequest = (): AxiosInstance => {
   return axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL,
+    baseURL: "https://de1.api.radio-browser.info/json/stations",
     headers: {
       "Content-Type": "application/json",
     },
